@@ -6,12 +6,14 @@ function App() {
   const [globalID, setGlobalID] = useState(0)
 
   function createTodo(event) {
-    // event.preventDefault()
-    setTodos(oldTodos => {
-      const id = globalID
+    event.preventDefault()
+    if (task) {
+      setTodos(oldTodos => {
+        return [...oldTodos, { todo: task, id: globalID }]
+      })
       setGlobalID(globalID + 1)
-      return [...oldTodos, { todo: task, id }]
-    })
+      setTask('')
+    }
   }
 
   function deleteItem(itemID) {
@@ -22,22 +24,24 @@ function App() {
 
   return <div>
     <h1>Best To Do App Ever</h1>
+    <form onSubmit={createTodo}>
       <input
         type="text"
         value={task}
         onChange={event => setTask(event.target.value)}
       />
-      <button onClick={createTodo}>Create Todo</button>
+      <button type="submit">Create Todo</button>
+    </form>
     <ul>
       {
-      todos.map(item => <div key={item.id}>
+        todos.map(item => <div key={item.id}>
           <li>
             {item.todo}
-            <button onClick={deleteItem(item.id)}>Delete</button>
+            <button onClick={() => { deleteItem(item.id) }}>Delete</button>
           </li>
         </div>
-      )
-    }
+        )
+      }
     </ul>
   </div>;
 }
